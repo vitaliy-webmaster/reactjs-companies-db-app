@@ -45,3 +45,9 @@ export const sampleCategories = {
 		"Харьков": ["Дергачи", "Пивденное"]
 	}
 };
+
+
+const data = {
+	"like": { "category": ["Автосервис", "Досуг"] },
+	"in": { "city": ["Днепр", "Одесса"] }
+};

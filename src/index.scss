@@ -199,7 +199,7 @@ main {
 
 .selection-search__input {
   color: #333;
-  padding: 0 0 0 40px;
+  padding: 0 40px 0 40px;
   border: 0;
   height: 100%;
   width: 100%;
@@ -265,7 +265,6 @@ main {
   flex-direction: row;
   flex: 0 0 auto;
   width: 100%;
-  cursor: pointer;
   background-color: #fff;
   border: 1px solid #eee;
   padding: 8px 10px;
@@ -274,33 +273,40 @@ main {
   margin-top: -1px;
   align-items: center;
 
-  .list-item__marker {
+  .list-item__marker, .list-item__marker-replacer {
     display: flex;
     justify-content: flex-start;
     align-self: stretch;
     align-items: center;
     flex: 0 0 20px;
+    margin: -8px 0 -8px -10px;
+    padding-left: 10px;
 
     img {
       max-width: 20px;
     }
   }
 
-  &.level-1 .list-item__marker {
-    flex-basis: 30px;
+  .list-item__marker {
+    cursor: pointer;
   }
 
-  &.level-2 .list-item__marker {
-    flex-basis: 45px;
+  &.level-1 .list-item__marker, &.level-1 .list-item__marker-replacer {
+    flex-basis: 40px;
   }
 
-  &.level-3 .list-item__marker {
-    flex-basis: 60px;
+  &.level-2 .list-item__marker, &.level-2 .list-item__marker-replacer {
+    flex-basis: 55px;
+  }
+
+  &.level-3 .list-item__marker, &.level-3 .list-item__marker-replacer {
+    flex-basis: 70px;
   }
 
   .list-item__name {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     padding-left: 8px;
+    cursor: pointer;
   }
 
   .list-item__checkbox {
@@ -308,12 +314,14 @@ main {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    cursor: pointer;
 
     input {
       position: relative;
-      top: 1px;
+      //top: 1px;
       padding: 0;
       margin: 0;
+      cursor: pointer;
     }
   }
 }
@@ -324,3 +332,27 @@ main {
   text-align: center;
 }
 
+.selection-search__cross-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 34px;
+  height: 100%;
+  cursor: pointer;
+
+  img {
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    transform: translateY(-50%);
+    position: absolute;
+  }
+}
+
+.selection-body__nomatch-box {
+  padding: 30px 0;
+  width: 100%;
+  height: auto;
+  text-align: center;
+}
