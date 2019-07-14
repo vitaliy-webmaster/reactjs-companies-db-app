@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
-import App from "./App";
+import Selector from "./components/Selector";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<Selector />, document.getElementById("root"));

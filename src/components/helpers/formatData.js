@@ -65,6 +65,33 @@ export const calculateInvertedDataset = (dataSet, invertTo) => {
 	return newDataSet;
 };
 
+export const renderDataObjForRequest = (emailFilter, phoneFilter, collectedCities, collectedCategories) => {
+	if (emailFilter && !phoneFilter) {
+		return {
+			"in": { "city": collectedCities },
+			"like": { "subcategory": collectedCategories },
+			"ne": { "email": "" }
+		};
+	} else if (!emailFilter && phoneFilter) {
+		return {
+			"in": { "city": collectedCities },
+			"like": { "subcategory": collectedCategories },
+			"ne": { "phone": "" }
+		};
+	} else if (emailFilter && phoneFilter) {
+		return {
+			"in": { "city": collectedCities },
+			"like": { "subcategory": collectedCategories },
+			"ne": { "phone": "", "email": "" }
+		};
+	} else if (!emailFilter && !phoneFilter) {
+		return {
+			"in": { "city": collectedCities },
+			"like": { "subcategory": collectedCategories }
+		};
+	}
+};
+
 // const renderSearchDataset = (localDataset, localLevel, localType, localPath) => {
 // 	let searchDataset = [];
 // 	Object.keys(localDataset).forEach(key => {

@@ -72,7 +72,8 @@ class SelectionBlock extends Component {
 								<img src={searchIcon} alt="Search Icon" />
 							</div>
 							<div className="selection-search__input">
-								<input type="text" placeholder='Введите наименование' value={this.state.search}
+								<input type="text" placeholder='Введите наименование'
+											 value={this.state.search}
 											 onChange={this.handleSearchChange} />
 							</div>
 							{this.state.search.length > 0 ? (

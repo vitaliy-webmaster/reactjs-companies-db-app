@@ -7,7 +7,7 @@ import {
 	calculateInvertedDataset, collectCheckedCategories,
 	collectCheckedCities,
 	formatCategoriesInput,
-	formatCitiesInput
+	formatCitiesInput, renderDataObjForRequest
 } from "../helpers/formatData";
 import ChangeDataContext from "../../context/ChangeDataContext";
 import ResultsBlock from "../ResultsBlock";
@@ -20,8 +20,11 @@ class Selector extends Component {
 		isPaymentLinkLoading: false,
 		isAllCitiesChecked: false,
 		isAllCategoriesChecked: false,
+		isClientPhoneValid: null,
+		isClientEmailValid: null,
 		phone: "",
 		email: "",
+		filters: { email: false, phone: false },
 		paymentLink: {},
 		cities: {},
 		categories: {},
@@ -62,7 +65,7 @@ class Selector extends Component {
 				// console.log(formattedCategories);
 				this.setState({ isLoading: false, cities: formattedCities, categories: formattedCategories },
 					() => {
-						console.log(this.state);
+						// console.log(this.state);
 					});
 			})
 			.catch(err => {
@@ -154,18 +157,16 @@ class Selector extends Component {
 	};
 
 	getLenData = (collectedCities, collectedCategories) => {
+		const { email: emailFilter, phone: phoneFilter } = this.state.filters;
 		this.setState({ isCompaniesLoading: true });
+		let data = renderDataObjForRequest(emailFilter, phoneFilter, collectedCities, collectedCategories);
+		console.log(data);
 		axios.post(
 			"http://5.23.53.17:8025/getlendata/",
-			{
-				"params": {
-					"in": { "city": collectedCities },
-					"like": { "subcategory": collectedCategories }
-				}
-			}
+			{ "params": data }
 		).then((results) => {
-			console.log("collectedCities:", collectedCities);
-			console.log("collectedSubcategories:", collectedCategories);
+			// console.log("collectedCities:", collectedCities);
+			// console.log("collectedSubcategories:", collectedCategories);
 			console.log("results:", results.data);
 			this.setState({ isCompaniesLoading: false, companies: results.data });
 		});
@@ -173,34 +174,53 @@ class Selector extends Component {
 
 	onPhoneChange = (event) => {
 		event.preventDefault();
-		this.setState({ phone: event.target.value });
+		const phone = event.target.value;
+		const regexp = /^[+()\d-]+$/;
+		console.log("match phone:", !!phone.match(regexp));
+		this.setState({ phone: event.target.value, isClientPhoneValid: !!phone.match(regexp) });
 	};
 
 	onEmailChange = (event) => {
 		event.preventDefault();
-		this.setState({ email: event.target.value });
+		const email = event.target.value;
+		const regexp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		console.log("match email:", !!email.match(regexp));
+		this.setState({ email: event.target.value, isClientEmailValid: !!email.match(regexp) });
 	};
 
 	getPaymentLink = (event, collectedCities, collectedCategories) => {
+		const { email, phone } = this.state;
+		const { email: emailFilter, phone: phoneFilter } = this.state.filters;
 		event.preventDefault();
+
+		const data = {
+			"method": "card",
+			"phone": phone,
+			"email": email,
+			"params": renderDataObjForRequest(emailFilter, phoneFilter, collectedCities, collectedCategories)
+		};
+		console.log(data);
+
 		this.setState({ isPaymentLinkLoading: true });
 		axios.post(
 			"http://5.23.53.17:8025/application/",
-			{
-				"method": "card",
-				"phone": this.state.phone,
-				"email": this.state.email,
-				"params": {
-					"in": { "city": collectedCities },
-					"like": { "subcategory": collectedCategories }
-				}
-			}
+			data
 		).then((results) => {
 			console.log("paymentLinkResults:", results.data);
 			this.setState({ isPaymentLinkLoading: false, paymentLink: results.data });
 		});
 
 
+	};
+
+	onChangeFilter = (e, filterType) => {
+		// e.preventDefault();
+		this.setState(prevState => ({
+			filters: {
+				...prevState.filters,
+				[filterType]: !prevState.filters[filterType]
+			}
+		}));
 	};
 
 	render() {
@@ -213,9 +233,6 @@ class Selector extends Component {
 				value={{ collectedCities, collectedCategories, toggleCheckbox: this.toggleCheckbox }}>
 				<div className='selector-wrapper'>
 					<div className='selector-wrapper__selection'>
-						<h1>Создание базы предприятий России и стран СНГ</h1>
-						<h3>Наш сервис позволяет легко и быстро создать базу интересующих Вас предприятий.
-							Выберите города и уточните свой запрос, используя рубрики.</h3>
 						{this.state.isLoading ? (
 							<div className="loading-container">
 								<img src={preloaderImg} alt="" />
@@ -233,16 +250,23 @@ class Selector extends Component {
 							</div>
 						)}
 					</div>
-					<ResultsBlock companies={this.state.companies}
-												getLenData={() => this.getLenData(collectedCities, collectedCategories)}
-												onEmailChange={this.onEmailChange}
-												phone={this.state.phone}
-												email={this.state.email}
-												onPhoneChange={this.onPhoneChange}
-												getPaymentLink={(event) => this.getPaymentLink(event, collectedCities, collectedCategories)}
-												paymentLink={this.state.paymentLink}
-					/>
-
+					<div className="selector-wrapper__results results">
+						<ResultsBlock isCompaniesLoading={this.state.isCompaniesLoading}
+													isPaymentLinkLoading={this.state.isPaymentLinkLoading}
+													companies={this.state.companies}
+													getLenData={() => this.getLenData(collectedCities, collectedCategories)}
+													onEmailChange={this.onEmailChange}
+													phone={this.state.phone}
+													email={this.state.email}
+													isClientPhoneValid={this.state.isClientPhoneValid}
+													isClientEmailValid={this.state.isClientEmailValid}
+													onPhoneChange={this.onPhoneChange}
+													getPaymentLink={(event) => this.getPaymentLink(event, collectedCities, collectedCategories)}
+													paymentLink={this.state.paymentLink}
+													filters={this.state.filters}
+													onChangeFilter={(e, filterType) => this.onChangeFilter(e, filterType)}
+						/>
+					</div>
 				</div>
 			</ChangeDataContext.Provider>
 		);

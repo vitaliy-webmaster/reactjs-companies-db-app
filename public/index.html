@@ -5,10 +5,45 @@
 	<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="theme-color" content="#000000" />
+	<link rel="stylesheet" href="%PUBLIC_URL%/style.css">
 	<title>База предприятий</title>
 </head>
 <body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="root"></div>
+<div class='app-layout'>
+	<div class='app-header'>
+		<div class="app-header__inner-top">
+			<div class="logo">
+				<span class="logo-text">Логотип сайта</span>
+			</div>
+		</div>
+		<div class="app-header__inner-bottom navbar">
+			<ul class='navbar-list'>
+				<li class='navbar-list__item'>
+					Главная
+				</li>
+				<li class='navbar-list__item'>
+					Подбор
+				</li>
+				<li class='navbar-list__item'>
+					О нас
+				</li>
+				<li class='navbar-list__item'>
+					Контакты
+				</li>
+			</ul>
+		</div>
+	</div>
+	<main>
+		<div class="main__inner-wrapper">
+			<div class="main__inner-wrapper-headers">
+				<h1>Создание базы предприятий России и стран СНГ</h1>
+				<h3>Наш сервис позволяет легко и быстро создать базу интересующих Вас предприятий.
+					Выберите города и уточните свой запрос, используя рубрики.</h3>
+			</div>
+			<div id="root"></div>
+		</div>
+	</main>
+</div>
+
 </body>
 </html>
