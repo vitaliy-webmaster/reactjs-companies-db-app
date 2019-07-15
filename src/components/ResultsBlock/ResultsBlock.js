@@ -1,36 +1,17 @@
 import React, { Component } from "react";
 import ChangeDataContext from "../../context/ChangeDataContext";
 import loadingRequest from "../../images/loading-request.gif";
+import FiltersBlock from "../FiltersBlock";
 
 class ResultsBlock extends Component {
 	static contextType = ChangeDataContext;
 
 	render() {
 		const { collectedCities, collectedCategories } = this.context;
-		const { paymentLink, companies, isPaymentLinkLoading, isCompaniesLoading, isClientPhoneValid, isClientEmailValid } = this.props;
+		const { filters, onChangeFilter, paymentLink, companies, isPaymentLinkLoading, isCompaniesLoading, isClientPhoneValid, isClientEmailValid } = this.props;
 		return (
 			<div className="results-box">
-				<div className="results-box__filters-box filters-box">
-					<h3>Фильтр</h3>
-					<div className='filters-box__email-box filters-box__item'>
-						<span className='filters-box__heading'>
-							<span>E-mail:</span>
-							<span>В базу будут включены только предприятия с e-mail</span>
-						</span>
-						<input type="checkbox" name='email-filter' id='email-filter'
-									 value={this.props.filters.email}
-									 onChange={e => this.props.onChangeFilter(e, "email")} />
-					</div>
-					<div className='filters-box__phone-box filters-box__item '>
-						<span className='filters-box__heading'>
-							<span>Телефоны</span>
-							<span>В базу будут включены только предприятия с телефонами</span>
-						</span>
-						<input type="checkbox" name='phone-filter' id='phone-filter'
-									 value={this.props.filters.phone}
-									 onChange={e => this.props.onChangeFilter(e, "phone")} />
-					</div>
-				</div>
+				<FiltersBlock filters={filters} onChangeFilter={onChangeFilter} />
 				<div className='results-box__completion-box'>
 					{(collectedCities.length > 0 && collectedCategories.length > 0) ? (
 						<>
@@ -40,19 +21,19 @@ class ResultsBlock extends Component {
 								<div><strong>{collectedCategories.length}</strong> категорий</div>
 							</div>
 							<h3>Далее нажмите на кнопку </h3>
-							{(isCompaniesLoading) ? (
-								<div className="results-box__get-loader-box">
-									<img src={loadingRequest} alt="" />
-								</div>
-							) : (
-								<div className="results-box__get-data-box">
-									<button onClick={this.props.getLenData}
-													disabled={isPaymentLinkLoading || isCompaniesLoading ||
-													!(collectedCities.length && collectedCategories.length)}>
-										Сформировать базу
-									</button>
-								</div>
-							)}
+							<div className="results-box__get-data-box">
+								<button onClick={this.props.getLenData}
+												disabled={isPaymentLinkLoading || isCompaniesLoading ||
+												!(collectedCities.length && collectedCategories.length)}>
+									{(isCompaniesLoading) ? (
+										<>
+											<span className="spinner-border spinner-border-sm" />
+											<span>Загрузка данных...</span>
+										</>
+									) : (<span>Сформировать базу</span>)}
+								</button>
+							</div>
+
 							{
 								(Object.keys(companies).length > 0) ? (
 									<div className='results-box__companies-results-box'>
@@ -85,19 +66,19 @@ class ResultsBlock extends Component {
 											</div>
 
 
-											{(isPaymentLinkLoading) ? (
-												<div className="results-box__get-loader-box-2">
-													<img src={loadingRequest} alt="" />
-												</div>
-											) : (
-												<div>
-													<button type='submit' onClick={this.props.getPaymentLink}
-																	disabled={!isClientPhoneValid || !isClientEmailValid || isPaymentLinkLoading || isCompaniesLoading ||
-																	!(collectedCities.length && collectedCategories.length)}
-													>Создать ссылку на оплату
-													</button>
-												</div>
-											)}
+											<div>
+												<button type='submit' onClick={this.props.getPaymentLink}
+																disabled={!isClientPhoneValid || !isClientEmailValid || isPaymentLinkLoading || isCompaniesLoading ||
+																!(collectedCities.length && collectedCategories.length)}
+												>
+													{(isPaymentLinkLoading) ? (
+														<>
+															<span className="spinner-border spinner-border-sm" />
+															<span>Создание ссылки...</span>
+														</>
+													) : (<span>Создать ссылку на оплату</span>)}
+												</button>
+											</div>
 
 										</form>
 										{Object.keys(paymentLink).length > 0 ? (
@@ -119,7 +100,7 @@ class ResultsBlock extends Component {
 					) : (
 						<>
 							<div className="results-box__messages-start">
-								<h3>Выберите хотя бы один город и вид деятельности. Выбрано: </h3>
+								<h3>Выберите хотя бы один город и вид деятельности. <span>Выбрано: </span></h3>
 								<div className="results-box__cities-count">
 									<div><strong>{collectedCities.length}</strong> городов</div>
 									<div><strong>{collectedCategories.length}</strong> категорий</div>

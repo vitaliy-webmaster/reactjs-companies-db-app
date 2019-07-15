@@ -10,9 +10,9 @@ class SelectionBlock extends Component {
 	state = { search: "" };
 
 	toggleIsChecked = () => {
-		console.log("toggleIsChecked");
+		// console.log("toggleIsChecked");
 		const { type } = this.props;
-		console.log(type);
+		// console.log(type);
 		if (type === "cities") {
 			this.props.toggleAllCities();
 		} else if (type === "categories") {
@@ -23,7 +23,7 @@ class SelectionBlock extends Component {
 	handleSearchChange = (event) => {
 		event.preventDefault();
 		this.setState({ search: event.target.value }, () => {
-			console.log(this.state.search);
+			// console.log(this.state.search);
 		});
 	};
 
@@ -50,9 +50,10 @@ class SelectionBlock extends Component {
 				const searchMatch = key.toLowerCase().indexOf(search.toLowerCase()) + 1;
 				const newLocalPath = [...localPath, key];
 				if (searchMatch) {
-					searchDataset.push(<SelectionListSearchItem type={localType} level={localLevel} path={newLocalPath}
-																											name={key} key={`${localPath.join("-")}-` + key}
-																											isChecked={localDataset[key]["isChecked"]} />);
+					searchDataset.push(
+						<SelectionListSearchItem type={localType} level={localLevel} path={newLocalPath}
+																		 name={key} key={`${localPath.join("-")}-` + key}
+																		 isChecked={localDataset[key]["isChecked"]} />);
 				}
 				if (localLevel < 3) {
 					searchDataset = searchDataset.concat(
@@ -83,7 +84,7 @@ class SelectionBlock extends Component {
 							) : null}
 						</div>
 						<div className="selection-header__title selection-title">
-							Выберите хотя бы один пункт из списка:
+							Выберите хотя бы один пункт:
 						</div>
 
 					</div>
@@ -105,6 +106,7 @@ class SelectionBlock extends Component {
 									);
 								}) : null
 						}
+
 						{
 							search.length > 0 ? renderSearchList(dataset, 1, type, []) : null
 						}

@@ -1,3 +1,14 @@
+@font-face {
+    font-family: 'Gotham Pro';
+    src: url('./fonts/GothamPro.eot');
+    src: local('Gotham Pro'), local('GothamPro'),
+    url('./fonts/GothamPro.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/GothamPro.woff') format('woff'),
+    url('./fonts/GothamPro.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* ##### GENERAL ##### */
 *, *:before, *:after {
     outline: 0;
@@ -26,6 +37,17 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+    color: #0160A0;
+    text-decoration: none;
+    border-bottom: 1px solid #acd;
+}
+
+a:hover {
+    color: #86b0ce;
+    border-bottom: 1px solid #d5e5ed;
+}
+
 .app-layout {
     display: flex;
     flex-direction: column;
@@ -44,10 +66,45 @@ body {
     align-items: stretch;
     flex: 0 0 auto;
     position: relative;
-    border-bottom: 1px solid #ddd;
-    background-color: #999;
+    background-color: #f7f7f7;
+    color: #000;
+    border: none;
     z-index: 1;
-    border: 1px dotted transparent;
+}
+
+.mainmenu {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-bottom: 10px;
+}
+
+.mainmenu span, .mainmenu a {
+    margin: 8px 10px 0;
+}
+
+.mainmenu span:first-child, .mainmenu a:first-child {
+    margin-left: 0;
+}
+
+.mainmenu .mainmenu-logo {
+    font-weight: bold;
+    margin-right: 1em;
+}
+
+.main__inner-wrapper-headers h1 {
+    font-family: 'Gotham Pro', sans-serif;
+    margin: 15px 0;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 34px;
+}
+
+.main__inner-wrapper-headers h3 {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 400;
 }
 
 .app-header__inner-top, .app-header__inner-bottom {
@@ -55,11 +112,11 @@ body {
     flex-direction: row;
     justify-content: space-between;
     background-color: #ffe5b7;
-    height: 50px;
-    line-height: 50px;
+    /*height: 43px;*/
+    height: auto;
+    line-height: 20px;
     z-index: 1000;
-    border: 1px dotted transparent;
-    padding: 0 25px;
+    padding: 0 15px;
 }
 
 .app-header__inner-top {
@@ -351,4 +408,7 @@ main {
     height: auto;
     text-align: center;
 }
- 
+
+.filter-switch {
+    margin: 0 auto;
+}

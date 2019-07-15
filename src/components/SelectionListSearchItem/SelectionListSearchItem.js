@@ -15,13 +15,16 @@ class SelectionListSearchItem extends Component {
 		const { level, path, name, isChecked } = this.props;
 		return (
 			<li>
-				<div className={`selection-list__item list-item level-${level}`}>
+				<div className={`selection-list__item list-item search-item level-${level}`}>
 					<div className='list-item__marker-replacer' />
 					<div className="list-item__checkbox">
 						<input type="checkbox" checked={isChecked} onChange={this.toggleIsChecked} />
 					</div>
 					<div className="list-item__name" onClick={this.toggleIsChecked}>
-						L{level}: {name} ({path.join(" - ")})
+						{name}
+						{
+							<div className='list-item__name-history'>{path.join(" -- ")}</div>
+						}
 					</div>
 				</div>
 			</li>

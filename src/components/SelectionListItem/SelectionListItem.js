@@ -1,10 +1,14 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
+import {
+	CSSTransition,
+	TransitionGroup
+} from "react-transition-group";
 import minusIcon from "../../images/minus-icon.png";
 import plusIcon from "../../images/plus-icon.png";
 import ChangeDataContext from "../../context/ChangeDataContext";
 
 
-class SelectionListItem extends Component {
+class SelectionListItem extends PureComponent {
 	static contextType = ChangeDataContext;
 	state = {
 		isOpened: false
@@ -42,27 +46,47 @@ class SelectionListItem extends Component {
 							<input type="checkbox" checked={isChecked} onChange={this.toggleIsChecked} />
 						</div>
 						<div className="list-item__name" onClick={this.toggleIsChecked}>
-							L{level}: {name}
+							{name}
 						</div>
 					</div>
 				</li>
-				{
-					(isOpened && level === 1) ?
-						Object.keys(dataset).sort().map(key => {
-							return (
-								<SelectionListItem type={type} level={2} path={newPath} dataset={dataset[key]["data"]} name={key}
-																	 key={key}
-																	 isChecked={dataset[key]["isChecked"]} />);
-						}) : null
-				}
-				{
-					(isOpened && level === 2 && type === "cities") ?
-						Object.keys(dataset).sort().map((key) => {
-							return (
-								<SelectionListItem type={type} level={3} path={newPath} dataset={{}} name={key} key={key}
-																	 isChecked={dataset[key]["isChecked"]} />);
-						}) : null
-				}
+				<TransitionGroup id="transition-level-1" component={null}>
+
+					{
+						(isOpened && level === 1) ?
+							Object.keys(dataset).sort().map(key => {
+								return (
+									<CSSTransition
+										key={key}
+										timeout={{ enter: 400, exit: 400 }}
+										classNames="list-item"
+									>
+										<SelectionListItem type={type} level={2} path={newPath} dataset={dataset[key]["data"]} name={key}
+																			 key={key}
+																			 isChecked={dataset[key]["isChecked"]} />
+									</CSSTransition>
+								);
+							}) : null
+					}
+				</TransitionGroup>
+
+				<TransitionGroup id="transition-level-2" component={null}>
+					{
+						(isOpened && level === 2 && type === "cities") ?
+							Object.keys(dataset).sort().map((key) => {
+								return (
+									<CSSTransition
+										key={key}
+										timeout={{ enter: 400, exit: 400 }}
+										classNames="list-item"
+									>
+										<SelectionListItem type={type} level={3} path={newPath} dataset={{}} name={key} key={key}
+																			 isChecked={dataset[key]["isChecked"]} />
+									</CSSTransition>
+								);
+							}) : null
+					}
+				</TransitionGroup>
 			</>
 		);
 	}

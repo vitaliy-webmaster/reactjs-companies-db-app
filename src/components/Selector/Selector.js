@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 import SelectionBlock from "../SelectionBlock";
-import preloaderImg from "../../images/preloader.gif";
-// import request from "browser-request";
 import {
 	calculateInvertedDataset, collectCheckedCategories,
 	collectCheckedCities,
@@ -11,6 +9,7 @@ import {
 } from "../helpers/formatData";
 import ChangeDataContext from "../../context/ChangeDataContext";
 import ResultsBlock from "../ResultsBlock";
+import FiltersBlock from "../FiltersBlock";
 
 class Selector extends Component {
 
@@ -135,7 +134,7 @@ class Selector extends Component {
 
 
 	toggleAllCities = () => {
-		console.log("toggleAllCities");
+		// console.log("toggleAllCities");
 		this.setState(prevState => {
 			const prevIsAllCitiesChecked = prevState.isAllCitiesChecked;
 			return {
@@ -146,7 +145,7 @@ class Selector extends Component {
 	};
 
 	toggleAllCategories = () => {
-		console.log("toggleAllCategories");
+		// console.log("toggleAllCategories");
 		this.setState(prevState => {
 			const prevIsAllCategoriesChecked = prevState.isAllCategoriesChecked;
 			return {
@@ -160,14 +159,14 @@ class Selector extends Component {
 		const { email: emailFilter, phone: phoneFilter } = this.state.filters;
 		this.setState({ isCompaniesLoading: true });
 		let data = renderDataObjForRequest(emailFilter, phoneFilter, collectedCities, collectedCategories);
-		console.log(data);
+		// console.log(data);
 		axios.post(
 			"http://5.23.53.17:8025/getlendata/",
 			{ "params": data }
 		).then((results) => {
 			// console.log("collectedCities:", collectedCities);
 			// console.log("collectedSubcategories:", collectedCategories);
-			console.log("results:", results.data);
+			// console.log("results:", results.data);
 			this.setState({ isCompaniesLoading: false, companies: results.data });
 		});
 	};
@@ -176,7 +175,7 @@ class Selector extends Component {
 		event.preventDefault();
 		const phone = event.target.value;
 		const regexp = /^[+()\d-]+$/;
-		console.log("match phone:", !!phone.match(regexp));
+		// console.log("match phone:", !!phone.match(regexp));
 		this.setState({ phone: event.target.value, isClientPhoneValid: !!phone.match(regexp) });
 	};
 
@@ -184,7 +183,7 @@ class Selector extends Component {
 		event.preventDefault();
 		const email = event.target.value;
 		const regexp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		console.log("match email:", !!email.match(regexp));
+		// console.log("match email:", !!email.match(regexp));
 		this.setState({ email: event.target.value, isClientEmailValid: !!email.match(regexp) });
 	};
 
@@ -199,14 +198,14 @@ class Selector extends Component {
 			"email": email,
 			"params": renderDataObjForRequest(emailFilter, phoneFilter, collectedCities, collectedCategories)
 		};
-		console.log(data);
+		// console.log(data);
 
 		this.setState({ isPaymentLinkLoading: true });
 		axios.post(
 			"http://5.23.53.17:8025/application/",
 			data
 		).then((results) => {
-			console.log("paymentLinkResults:", results.data);
+			// console.log("paymentLinkResults:", results.data);
 			this.setState({ isPaymentLinkLoading: false, paymentLink: results.data });
 		});
 
@@ -224,7 +223,7 @@ class Selector extends Component {
 	};
 
 	render() {
-
+		const { filters } = this.state;
 		const collectedCities = collectCheckedCities(this.state.cities);
 		const collectedCategories = collectCheckedCategories(this.state.categories);
 
@@ -233,9 +232,12 @@ class Selector extends Component {
 				value={{ collectedCities, collectedCategories, toggleCheckbox: this.toggleCheckbox }}>
 				<div className='selector-wrapper'>
 					<div className='selector-wrapper__selection'>
+						<div className="selection-filters-mob-container">
+							<FiltersBlock filters={filters} onChangeFilter={this.onChangeFilter} />
+						</div>
 						{this.state.isLoading ? (
-							<div className="loading-container">
-								<img src={preloaderImg} alt="" />
+							<div className="spinner-main-loader">
+								<div className="spinner-border" role="status" />
 							</div>
 						) : (
 							<div className="selection-container">
@@ -250,6 +252,7 @@ class Selector extends Component {
 							</div>
 						)}
 					</div>
+					<div className="selector-wrapper__results-placeholder" />
 					<div className="selector-wrapper__results results">
 						<ResultsBlock isCompaniesLoading={this.state.isCompaniesLoading}
 													isPaymentLinkLoading={this.state.isPaymentLinkLoading}
