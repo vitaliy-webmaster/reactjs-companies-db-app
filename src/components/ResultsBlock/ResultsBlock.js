@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ChangeDataContext from "../../context/ChangeDataContext";
-import loadingRequest from "../../images/loading-request.gif";
 import FiltersBlock from "../FiltersBlock";
 
 class ResultsBlock extends Component {
@@ -9,6 +8,11 @@ class ResultsBlock extends Component {
 	render() {
 		const { collectedCities, collectedCategories } = this.context;
 		const { filters, onChangeFilter, paymentLink, companies, isPaymentLinkLoading, isCompaniesLoading, isClientPhoneValid, isClientEmailValid } = this.props;
+
+		if (Object.keys(paymentLink).length > 0 && paymentLink.ok) {
+			window.location.href = paymentLink.link;
+		}
+
 		return (
 			<div className="results-box">
 				<FiltersBlock filters={filters} onChangeFilter={onChangeFilter} />
